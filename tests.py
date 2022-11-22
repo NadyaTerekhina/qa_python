@@ -34,20 +34,19 @@ class TestBooksCollector:
         assert len(collector.get_books_rating()) == 1
 
     def test_add_new_book_default_raiting_is_one(self):
+        # проверяем метод (аdd_new_book)
+        # добавляем книгу и проверяем рейтинг по умолчанию - 1
         collector=BooksCollector()
-        #проверяем метод (аdd_new_book)
-        #добавляем книгу и проверяем рейтинг по умолчанию - 1
         collector.add_new_book('Куджо')
-        assert collector.books_rating['Куджо'] == 1
+        assert collector.get_book_rating('Куджо') == 1
 
-    def test_set_book_rating_get_book_rating_is_five(self):
-        #проверяем метод (set_book_rating и get_book_raiting)
+    def test_set_book_rating_is_five(self):
+        #проверяем метод (set_book_rating)
         #добавляем книгу и устанавливаем ей рейтинг 5, затем проверяем, что это 5
         # проверяем, что при вводе имени книги получаем рейтинг 5
         collector = BooksCollector()
         collector.add_new_book('Оно')
         collector.set_book_rating('Оно',5)
-        assert collector.books_rating['Оно'] == 5
         assert collector.get_book_rating('Оно') == 5
 
     def test_get_books_with_specific_rating_three_books_with_rating_three(self):
@@ -58,54 +57,49 @@ class TestBooksCollector:
         for book in books:
             collector.add_new_book(book)
             collector.set_book_rating(book,3)
-            specific_books=collector.get_books_with_specific_rating(3)
-        assert len(specific_books)==3
-        assert 'Кладбище домашних животных' in specific_books
-        assert 'Кристина' in specific_books
-        assert 'Сияние' in specific_books
+            check = all(item in books for item in collector.get_books_with_specific_rating(3))
+        assert check
 
-        #проверяем метод (add_book_in_favorites)
-        #проверяем что книга в списке избранных
+
 
     def test_add_book_in_favorites(self):
+        # проверяем метод (add_book_in_favorites)
+        # проверяем что книга в списке избранных
         collector = BooksCollector()
         collector.add_new_book('Под куполом')
-        if 'Под куполом' in collector.books_rating:
-            collector.add_book_in_favorites('Под куполом')
-            assert 'Под куполом' in collector.favorites
+        collector.add_book_in_favorites('Под куполом')
+        assert 'Под куполом' in collector.get_list_of_favorites_books()
 
 
-        #проверяем метод(delete_book_from_favorites)
-        #проверяем, что удаленной книги нет в словаре
 
     def test_delete_book_from_favorites(self):
+        # проверяем метод(delete_book_from_favorites)
+        # проверяем, что удаленной книги нет в словаре
         collector = BooksCollector()
         collector.add_new_book('Долгая прогулка')
         collector.add_book_in_favorites('Долгая прогулка')
-        if 'Долгая прогулка' in collector.favorites:
-            collector.delete_book_from_favorites('Долгая прогулка')
-            assert 'Долгая прогулка' not in collector.favorites
+        collector.delete_book_from_favorites('Долгая прогулка')
+        assert 'Долгая прогулка' not in collector.get_list_of_favorites_books()
 
-        #проверяем метод (get_books_rating)
-        #проверяем, что это словарь,что он не пустой
+
+
     def test_get_books_rating(self):
+        #проверяем, это словарь и что он не пустой
         collector = BooksCollector()
         collector.add_new_book('Чужак')
-        empty_dic={}
         assert type(collector.get_books_rating()) == dict
-        assert collector.get_books_rating() != empty_dic
+        assert collector.get_books_rating() != {}
 
 
-        #проверяем метод (get_list_of_favorites_books)
-        #проверяем, что это список, что он не пустой
+
     def test_get_list_of_favorites_books(self):
+        # проверяем метод (get_list_of_favorites_books)
+        # проверяем, что это список, что он не пустой
         collector = BooksCollector()
         collector.add_new_book('Керри')
-        empty_list=[]
-        if 'Керри' in collector.books_rating:
-            collector.add_book_in_favorites('Керри')
-            assert type(collector.get_list_of_favorites_books()) == list
-            assert collector.get_list_of_favorites_books()!= empty_list
+        assert type(collector.get_list_of_favorites_books()) == list
+        assert not collector.get_list_of_favorites_books()
+
 
 
 
